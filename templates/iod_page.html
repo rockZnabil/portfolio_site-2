@@ -1,0 +1,286 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>Bio-IT Convergence Lab</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+  <link rel="stylesheet" href="{% static "css/style.css" %}"/>
+  <script src="{% static "js/jquery.min.js" %}"></script>
+  <script src="{% static "js/popper.min.js" %}"></script>
+  <script src="{% static "js/bootstrap.min.js" %}"/></script>
+
+
+  <!-- Plotly.js -->
+        <script src="{% static "js/plotly-latest.min.js" %}"></script>
+
+
+  <!-- anychart.js -->
+  <script src="{% static "js/anychart-core.min.js" %}"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-map.min.js" type="text/javascript"></script>
+  <script src="https://cdn.anychart.com/geodata/1.2.0/countries/bangladesh/bangladesh.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js" data-export="true"></script>
+
+
+    <style>
+      html, body #bdmap {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+
+
+</head>
+
+<body>
+
+<div class="jumbotron">
+    <div class="col-sm-12 text-right">
+        <a href="\admin">Login&nbsp&nbsp&nbsp</a>
+    </div>
+
+    <div class="row  text-center" style="max-width: 1200px; margin: auto;">
+    <div class="col-sm-3" style="min-width: 200px;">
+        <img src="{% static "img/BicLogo.png" %}"/><br>
+    </div>
+    <div class="col-sm-9 text-right">
+    </div>
+
+    </div>
+
+</div>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="box-shadow: 8px 8px 32px 8px rgba(0,0,0,0.2);">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav nav-center">
+      <li class="nav-item">
+        <a class="nav-link" href="\index">Homepage</a>
+      </li>
+  <div class="dropdown">
+    <button class="dropbtn" type="button" data-toggle="dropdown">Members &nbsp&nbsp<b class="caret dropdown-toggle"></b></button>
+    <div class="dropdown-menu">
+      <a href="\professor">Director</a>
+      <a href="\phd">Ph.D. Students</a>
+      <a href="\ms">M.S. Students</a>
+      <a href="\bs">B.S. Students</a>
+      <a href="#">Alumni</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn" type="button" data-toggle="dropdown">Research &nbsp&nbsp<b class="caret dropdown-toggle"></b></button>
+    <div class="dropdown-menu">
+      <a href="nano_assembly">Nano-assembly</a>
+      <a href="nanofabrication">Nanofabrication</a>
+      <a href="nano_bio">Nano-bio</a>
+      <a href="nano_energy">Nano-energy</a>
+    </div>
+  </div>
+      <li class="nav-item">
+        <a class="nav-link" href="\publications">Publications</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="\contact">Contact</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+    <div class="col-sm-12" style="margin-top: 30px; position: auto; text-align: justify;">
+      <h1>IoD Dashboard</h1>
+      <hr>
+<!--
+<script>
+    $(document).ready(function(){
+        $("button").click(function(){
+            $.get("https://jsonplaceholder.typicode.com/posts", function(data, status){
+                alert("Data: " + data + "\nStatus: " + status);
+            });
+        });
+    });
+</script>
+
+<button>Send an HTTP GET request to a page and get the result back</button>
+
+{%
+    dim ftitle,body
+    ftitle=Request.Form("title")
+    body=Request.Form("body")
+    Response.Write("Dear " & ftitle & ". ")
+    Response.Write("Hope you live well in " & body & ".")
+%}
+-->
+
+<!--
+      <!-- Plotly chart will be drawn inside this DIV
+        <div id="myDiv" style="max-height: 800px; position: relative; align: left;"></div>
+<script>
+var data = [{
+        type: 'scattergeo',
+        mode: 'markers',
+        locations: ['SEN','GHA','ZAF','SOM','UGA','CON'],
+        marker: {
+            size: [50, 30, 15, 10, 50],
+            color: [100, 20, 300, 400, 1000],
+            cmin: 0,
+            cmax: 1000,
+            colorscale: 'Red',
+            colorbar: {
+                title: 'Number of Patients',
+                //ticksuffix: '%',
+                //showticksuffix: 'all'
+            },
+            line: {
+                color: 'red',
+            }
+        },
+        name: 'africa data'
+    }];
+
+    var layout = {
+        'geo': {
+            'scope': 'africa',
+            'resolution': 72
+        }
+    };
+
+
+    Plotly.newPlot('myDiv', data, layout, {displayModeBar: false, responsive: true});
+
+</script>
+
+-->
+
+<div id="bdmap" style="width: 800px; height: 700px;"></div>
+
+<script>
+    	anychart.onDocumentReady(function() {
+    // create map
+    map = anychart.map();
+
+    // create data set
+    var dataSet = anychart.data.set([
+		{'id': 'BD.DA', 'value': 200, 'name:': 'Dhaka'},
+		{'id': 'BD.KH', 'value': 500, 'name:': 'Khulna'},
+		{'id': 'BD.BA', 'value': 600, 'name:': 'Barishal'},
+		{'id': 'BD.CG', 'value': 900, 'name:': 'Chittagong'},
+		{'id': 'BD.SY', 'value': 800, 'name:': 'Sylhet'},
+		{'id': 'BD.RJ', 'value': 1000, 'name:': 'Rajshahi'},
+		{'id': 'BD.RP', 'value': 400, 'name:': 'Rangpur'}
+    ]);
+
+    // create choropleth series
+    series = map.choropleth(dataSet);
+
+    // set geoIdField to 'id', this field contains in geo data meta properties
+    series.geoIdField('id');
+
+
+    // set map color settings
+    series.colorScale(anychart.scales.ordinalColor([{less:300,color:'#07af00'},{from:300, to:500, color:'#49fc5b'},{from:500, to:700, color:'#ffd400'},{from:700, to:800, color:'#ff871e'},{greater:900, color:'#ff0000'}]));
+    //series.colorScale(anychart.scales.linearColor('#deebf7', '#3182bd'));
+    series.hovered().hatchFill("percent10", '#ffd400');;
+    series.labels(true);
+    series.labels().fontColor("#000000");
+    //series.hovered().labels().fontColor("#01579b");
+    map.colorRange(true);
+    //chart.getCredits().setEnabled(false);
+
+    // set geo data, you can find this map in our geo maps collection
+    // https://cdn.anychart.com/#maps-collection
+    map.geoData(anychart.maps['bangladesh']);
+    map.credits().enabled(false);
+
+    //set map container id (div)
+    map.container('bdmap');
+
+    //initiate map drawing
+    map.draw();
+});
+</script>
+
+
+    <!--Javascript code for AJAX-->
+        <script>
+            $(function (){
+                var $orders = $('#orders');
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://jsonplaceholder.typicode.com/posts',
+                    success: function(orders) {
+
+                            $.each(orders, function (i, order) {
+                                if(i < 10) {
+                                    $orders.append('<li>User ID: ' + order.userId + ', <br> ID: ' + order.id + '</li>');
+                                }
+                            });
+                    },
+                    error: function () {
+                        alert('Error loading orders.');
+                    }
+                });
+            });
+        </script>
+
+
+
+        <ul id="orders"></ul>
+
+        <!--Java script library for AJAX &API-->
+          <script type="text/javascript" src="{% static "engine2/jquery.js" %}"></script>
+          <script type="text/javascript" src="{% static "engine2/main.js" %}"></script>
+        
+
+        <!--
+        <script>
+            function loadDoc() {
+              var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  document.getElementById("demo").innerHTML = this.responseText;
+                }
+              };
+              xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+              xhttp.send();
+            }
+        </script>
+
+        <button type="button" onclick="loadDoc()">Request data</button>
+
+        <h6 id="demo">Change content</h6>
+-->
+
+    <br>
+    </div>
+    </div>
+  </div>
+  </div>
+</div>
+<br>
+<br>
+
+<div class="jumbotron" style="margin:0px; background-color: #343A40; box-shadow: -8px -8px 32px 8px rgba(0,0,0,0.2);">
+    <div class="row" style="max-width: 1200px; margin: auto;">
+    <div class="col-sm-2 text-center">
+        <div class="KwLogo"><img src="{% static "img/Kwangwoon-University.png" %}"/></div>
+    </div>
+    <div class="col-sm-10">
+                <h6 style="color: gray;">20 Kwangwoon-ro, Nowon-gu, Seoul 01897, Korea | +82-(0)2-940-5114</h6>
+                <h6 style="color: gray;">Copyright © Bio-IT Convergence Lab, Kwangwoon University. All rights reserved.</h6>
+    </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
